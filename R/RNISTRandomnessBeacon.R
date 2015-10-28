@@ -12,3 +12,5 @@ NULL
 #> NULL
 require(RCurl)
 require(XML)
+
+BEACON_URL <- "https://beacon.nist.gov/rest/record/"

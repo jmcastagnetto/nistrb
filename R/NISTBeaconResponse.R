@@ -1,20 +1,6 @@
-require(RCurl)
-require(XML)
-
 # Let's make a special class
-NISTBeaconResponse <- function (ts) {
-  if(!is.integer(ts) &
-     !inherits(ts, "POSIXct") &
-     !inherits(ts, "POSIXlt")) {
-    stop("We expected a unix timestamp as an integer or a POSIXct or POSIXlt value")
-  }
-  tsval <- ifelse(inherits(ts, "POSIXct") | inherits(ts, "POSIXlt"),
-                  as.integer(ts), ts)
-  url <- paste0("https://beacon.nist.gov/rest/record/", tsval)
-  headers <- basicTextGatherer()  # might be a good idea to use this to check the HTTP status code
-  response <- getURL(url, headerfunction=headers$update)
-  # use the following line instead, if you get cert validation errors
-  # response <- getURL(url, .opts = list(ssl.verifypeer = FALSE), headerfunction=headers$update)
+NISTBeaconResponse <- function (response) {
+  cat(response)
   beacon <- structure(as.data.frame(xmlToList(xmlParse(response, asText=TRUE))),
                       class="NISTBeaconResponse")
   beacon$frequency <- as.integer(as.character(beacon$frequency))
