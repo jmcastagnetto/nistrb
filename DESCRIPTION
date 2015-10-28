@@ -1,11 +1,15 @@
 Package: RNISTRandomnessBeacon
 Type: Package
-Title: An package to access the NIST Randomness Beacon REST Service
+Title: Access the NIST Randomness Beacon
 Version: 0.1
 Date: 2015-10-28
-Author: Jesus M. Castagnetto <jesus@castagnetto.com>
-Maintainer: Jesus M. Castagnetto <jesus@castagnetto.com>
-Description: A package that allows programmatic access to the NIST Randomness
-             Beacon, through its REST service interface.
-License: BSD 2-Clause
+Authors@R: person("Jesus", "Castagnetto", email="jesus@castagnetto.com",
+            role=c("aut", "cre"))
+Maintainer: Jesus Castagnetto <jesus@castagnetto.com>
+Description: This package allows programmatic access to the NIST Randomness
+    Beacon, through its REST web service interface.
+License: MIT
 LazyData: TRUE
+Imports:
+    RCurl
+    XML
