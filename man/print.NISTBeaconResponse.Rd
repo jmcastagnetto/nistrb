@@ -4,7 +4,7 @@
 \alias{print.NISTBeaconResponse}
 \title{Pretty prints a beacon response}
 \usage{
-\method{print}{NISTBeaconResponse}(response)
+\method{print}{NISTBeaconResponse}(response, ...)
 }
 \arguments{
 \item{response}{a NISTBeaconResponse object}

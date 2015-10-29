@@ -7,7 +7,7 @@
 #' print(response)
 #' @export
 
-print.NISTBeaconResponse <- function(response) {
+print.NISTBeaconResponse <- function(response, ...) {
   if(!inherits(response, "NISTBeaconResponse")) {
     stop("An object of type NISTBeaconResponse was expected")
   }

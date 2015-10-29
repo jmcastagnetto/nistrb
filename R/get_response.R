@@ -1,3 +1,5 @@
+#require(RCurl)
+
 # Base URL for NIST Randomness Beacon
 BEACON_URL <- "https://beacon.nist.gov/rest/record"
 
@@ -17,8 +19,6 @@ BEACON_OPS <- c("record", "next", "previous", "last", "start-chain")
 
 
 get_response <- function(type, ts = TS_NOW) {
-  #suppressMessages(require(RCurl))
-
   if (!type %in% BEACON_OPS) {
     stop("Unsupported beacon service operation")
   }
@@ -32,9 +32,9 @@ get_response <- function(type, ts = TS_NOW) {
   ts <- as.numeric(trunc(ts, units = "mins"))
   endpoint <- paste0(BEACON_URL, op, ifelse(type=="last", "", ts))
   # cat(endpoint)
-  headers <- basicTextGatherer()  # might be a good idea to use this to check the HTTP status code
-  response <- getURI(endpoint, headerfunction=headers$update)
-  parsed_header <- parseHTTPHeader(headers$value())
+  headers <- RCurl::basicTextGatherer()  # might be a good idea to use this to check the HTTP status code
+  response <- RCurl::getURI(endpoint, headerfunction=headers$update)
+  parsed_header <- RCurl::parseHTTPHeader(headers$value())
   status <- as.integer(parsed_header["status"])
   if (status == 200) {
     return(NISTBeaconResponse(response))
@@ -45,5 +45,3 @@ get_response <- function(type, ts = TS_NOW) {
                parsed_header["Date"]))
   }
 }
-
-

@@ -1,3 +1,4 @@
+#require(XML)
 #' A class representing the NIST Randomness Beacon response
 #'
 #' @param response The raw XML response from the service
@@ -5,10 +6,10 @@
 #' @export
 
 NISTBeaconResponse <- function (response) {
-  #suppressMessages(require(XML))
   beacon <- structure(
               as.data.frame(
-                xmlToList(xmlParse(response, asText=TRUE)),
+                XML::xmlToList(
+                  XML::xmlParse(response, asText=TRUE)),
                 stringsAsFactors = FALSE),
               class="NISTBeaconResponse")
   beacon$frequency <- as.integer(beacon$frequency)
