@@ -1,3 +1,10 @@
+#' Pretty prints a beacon response
+#'
+#' @param response a NISTBeaconResponse object
+#' @return A string representation of the response
+#' @examples
+#' response <- get_last()
+#' print(response)
 
 print.NISTBeaconResponse <- function(response) {
   if(!inherits(response, "NISTBeaconResponse")) {

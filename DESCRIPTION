@@ -11,5 +11,5 @@ Description: This package allows programmatic access to the NIST Randomness
 License: MIT
 LazyData: TRUE
 Imports:
-    RCurl
+    RCurl,
     XML
