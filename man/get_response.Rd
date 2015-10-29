@@ -17,9 +17,4 @@ A NISTBeaconResponse object
 \description{
 This functions is intended to be called by the wrapper functions
 }
-\examples{
-ts <- as.POSIXct(Sys.time(), tz="UTC")
-get_record(ts)
-get_previous(ts)
-}
 

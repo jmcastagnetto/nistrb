@@ -5,6 +5,7 @@
 #' @examples
 #' ts <- as.POSIXct("2014-01-01 12:00:00", tz="UTC")
 #' get_record(ts)
+#' @export
 
 get_record = function(ts) {
   get_response("record", ts)

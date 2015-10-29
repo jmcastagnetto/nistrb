@@ -5,6 +5,7 @@
 #' @examples
 #' response <- get_last()
 #' print(response)
+#' @export
 
 print.NISTBeaconResponse <- function(response) {
   if(!inherits(response, "NISTBeaconResponse")) {

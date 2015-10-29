@@ -14,13 +14,10 @@ BEACON_OPS <- c("record", "next", "previous", "last", "start-chain")
 #' @param type Indicates which of the beacon services is called
 #' @param ts The timestamp to be used, by default the current one
 #' @return A NISTBeaconResponse object
-#' @examples
-#' ts <- as.POSIXct(Sys.time(), tz="UTC")
-#' get_record(ts)
-#' get_previous(ts)
+
 
 get_response <- function(type, ts = TS_NOW) {
-  require(RCurl)
+  #suppressMessages(require(RCurl))
 
   if (!type %in% BEACON_OPS) {
     stop("Unsupported beacon service operation")
@@ -34,7 +31,7 @@ get_response <- function(type, ts = TS_NOW) {
   # we need to truncate the timestamp to the closest minute
   ts <- as.numeric(trunc(ts, units = "mins"))
   endpoint <- paste0(BEACON_URL, op, ifelse(type=="last", "", ts))
-  cat(endpoint)
+  # cat(endpoint)
   headers <- basicTextGatherer()  # might be a good idea to use this to check the HTTP status code
   response <- getURI(endpoint, headerfunction=headers$update)
   parsed_header <- parseHTTPHeader(headers$value())

@@ -5,6 +5,7 @@
 #' @examples
 #' ts <- as.POSIXct(Sys.time(), tz="UTC")
 #' get_start_chain(ts)
+#' @export
 
 get_start_chain = function(ts) {
   get_response("start-chain", ts)
