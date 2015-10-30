@@ -15,10 +15,10 @@ BEACON_OPS <- c("record", "next", "previous", "last", "start-chain")
 #'
 #' @param type Indicates which of the beacon services is called
 #' @param ts The timestamp to be used, by default the current one
-#' @return A NISTBeaconResponse object
+#' @return An nrb_response object
 
 
-get_response <- function(type, ts = TS_NOW) {
+nrb_get_response <- function(type, ts = TS_NOW) {
   if (!type %in% BEACON_OPS) {
     stop("Unsupported beacon service operation")
   }
@@ -37,7 +37,7 @@ get_response <- function(type, ts = TS_NOW) {
   parsed_header <- RCurl::parseHTTPHeader(headers$value())
   status <- as.integer(parsed_header["status"])
   if (status == 200) {
-    return(NISTBeaconResponse(response))
+    return(nrb_response(response))
   } else {
     stop(paste0("The request (", endpoint, ") to the NIST Beacon returned an error: ",
                status, " [",
