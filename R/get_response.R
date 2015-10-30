@@ -32,14 +32,14 @@ get_response <- function(type, ts = TS_NOW) {
   ts <- as.numeric(trunc(ts, units = "mins"))
   endpoint <- paste0(BEACON_URL, op, ifelse(type=="last", "", ts))
   # cat(endpoint)
-  headers <- RCurl::basicTextGatherer()  # might be a good idea to use this to check the HTTP status code
+  headers <- RCurl::basicTextGatherer()
   response <- RCurl::getURI(endpoint, headerfunction=headers$update)
   parsed_header <- RCurl::parseHTTPHeader(headers$value())
   status <- as.integer(parsed_header["status"])
   if (status == 200) {
     return(NISTBeaconResponse(response))
   } else {
-    stop(paste0("NIST Beacon returned an error: ",
+    stop(paste0("The request (", endpoint, ") to the NIST Beacon returned an error: ",
                status, " [",
                parsed_header["statusMessage"], "] on ",
                parsed_header["Date"]))
