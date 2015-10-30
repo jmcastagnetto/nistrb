@@ -19,9 +19,11 @@ Description: This package allows programmatic access to the NIST Randomness
     }
 License: MIT + file LICENSE
 LazyData: TRUE
-Imports: 
+Imports:
     RCurl,
     XML
 Roxygen: list(roclets = c("rd", "collate", "vignette", "namespace"))
-Suggests: knitr
+Suggests:
+    knitr,
+    testthat
 VignetteBuilder: knitr
