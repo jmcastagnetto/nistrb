@@ -6,5 +6,5 @@
 #' @export
 
 nrb_get_last <- function() {
-  nrb_get_response("last")
+  nrb_call_service("last")
 }

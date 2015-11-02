@@ -1,13 +1,13 @@
 #require(RCurl)
 
 # Base URL for NIST Randomness Beacon
-BEACON_URL <- "https://beacon.nist.gov/rest/record"
+.BEACON_URL <- "https://beacon.nist.gov/rest/record"
 
 # Default timestamp value
-TS_NOW <- as.POSIXct(Sys.time(), tz = "UTC")
+.TS_NOW <- as.POSIXct("2015-01-01 12:00:00", tz = "UTC")
 
 # Operations supported by the NIST Randomness Beacon
-BEACON_OPS <- c("record", "next", "previous", "last", "start-chain")
+.BEACON_OPS <- c("record", "next", "previous", "last", "start-chain")
 
 #' Generic function that does the calling and processes the beacon's response
 #'
@@ -18,8 +18,8 @@ BEACON_OPS <- c("record", "next", "previous", "last", "start-chain")
 #' @return An nrb_response object
 
 
-nrb_get_response <- function(type, ts = TS_NOW) {
-  if (!type %in% BEACON_OPS) {
+nrb_call_service <- function(type, ts = .TS_NOW) {
+  if (!type %in% .BEACON_OPS) {
     stop("Unsupported beacon service operation")
   }
   op <- ifelse(type == "record", "/", paste0("/",type,"/"))
@@ -30,7 +30,7 @@ nrb_get_response <- function(type, ts = TS_NOW) {
   }
   # we need to truncate the timestamp to the closest minute
   ts <- as.numeric(trunc(ts, units = "mins"))
-  endpoint <- paste0(BEACON_URL, op, ifelse(type=="last", "", ts))
+  endpoint <- paste0(.BEACON_URL, op, ifelse(type=="last", "", ts))
   # cat(endpoint)
   headers <- RCurl::basicTextGatherer()
   response <- RCurl::getURI(endpoint, headerfunction=headers$update)

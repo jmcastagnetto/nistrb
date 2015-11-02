@@ -9,5 +9,5 @@
 
 
 nrb_get_previous = function(ts) {
-  nrb_get_response("previous", ts)
+  nrb_call_service("previous", ts)
 }

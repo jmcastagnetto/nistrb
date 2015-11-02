@@ -8,5 +8,5 @@
 #' @export
 
 nrb_get_next = function(ts) {
-  nrb_get_response("next", ts)
+  nrb_call_service("next", ts)
 }

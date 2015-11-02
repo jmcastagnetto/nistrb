@@ -14,18 +14,19 @@ print.nrb_response <- function(x, ...) {
   }
   breakline <- function(longline) {
     lines <- gsub('(.{1,50})', '\\1\n', longline)
-    lines <- gsub('\n', '\n\t\t', lines, fixed=TRUE)
+    lines <- gsub('\n', '\n                ', lines, fixed=TRUE)
     lines
   }
   output <- "NIST Randomness Beacon Response\n===============================\n\n"
-  output <- paste0(output, "* version:\t", x$version, "\n")
-  output <- paste0(output, "* frequency:\t", x$frequency, " seconds\n\n")
-  output <- paste0(output, "* timestamp:\t", as.POSIXct(x$timeStamp, origin="1970-01-01"),
+  output <- paste0(output, "* version:      ", x$version, "\n")
+  output <- paste0(output, "* frequency:    ", x$frequency, " seconds\n\n")
+  output <- paste0(output, "* timestamp:    ", as.POSIXct(x$timeStamp, origin="1970-01-01"),
                    " (", x$timeStamp,")\n")
-  output <- paste0(output, "* seed:\t\t", breakline(x$seedValue), "\n")
-  output <- paste0(output, "* prev value:\t", breakline(x$previousOutputValue), "\n")
-  output <- paste0(output, "* signature:\t", breakline(x$signatureValue), "\n")
-  output <- paste0(output, "* output:\t", breakline(x$outputValue), "\n")
-  output <- paste0(output, "* status:\t", x$statusCode , " (", x$statusDesc,")\n")
+  output <- paste0(output, "* seed:         ", breakline(x$seedValue), "\n")
+  output <- paste0(output, "* prev.:        ", breakline(x$previousOutputValue), "\n")
+  output <- paste0(output, "* signature:    ", breakline(x$signatureValue), "\n")
+  output <- paste0(output, "* output:       ", breakline(x$outputValue), "\n")
+  output <- paste0(output, "* status:       ", x$statusCode , " (", x$statusDesc,")\n")
   cat(output, ...)
 }
+

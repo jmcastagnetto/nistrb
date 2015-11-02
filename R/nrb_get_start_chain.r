@@ -8,5 +8,5 @@
 #' @export
 
 nrb_get_start_chain = function(ts) {
-  nrb_get_response("start-chain", ts)
+  nrb_call_service("start-chain", ts)
 }

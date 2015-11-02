@@ -1,58 +1,80 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "nistr - Quick Reference"
+author: "Jesus Castagnetto (<jesus@castagnetto.com>)"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{nistr - Quick Reference}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+This package implements R functions and an S3 class to access the
+NIST the NIST Randomness Beacon, through its REST web service interface.
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+The NIST service <q>generates full-entropy bit-strings and posts them in blocks
+of 512 bits every 60 seconds</q>^[https://beacon.nist.gov/home]
 
-## Vignette Info
+## Implementation details
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+### Functions
 
-## Styles
+According to the beacon's documentation, there are five endpoints defined and
+this package wraps the call to each one in a function:
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+```{r echo=FALSE, results='asis'}
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+df <- data.frame(
+  Function = c(
+    "`nrb_get_last()`",
+    "`nrb_get_next(timestamp)`",
+    "`nrb_get_previous(timestamp)`",
+    "`nrb_get_record(timestamp)`",
+    "`nrb_get_start_chain(timestamp)`"
+  ),
+  Endpoint = c(
+    "`https://beacon.nist.gov/rest/record/last`",
+    "`https://beacon.nist.gov/rest/record/next/<timestamp>`",
+    "`https://beacon.nist.gov/rest/record/previous/<timestamp>`",
+    "`https://beacon.nist.gov/rest/record/<timestamp>`",
+    "`https://beacon.nist.gov/rest/record/start-chain/<timestamp>`"
+  ),
+  Description = c(
+    "Last Record",
+    "Next Record",
+    "Previous Record",
+    "Current Record (or next closest)",
+    "Start Chain Record"
+  )
+      )
 
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+knitr::kable(df)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+Where `timestamp` is the POSIX time format: the number of seconds since midnight
+UTC, January 1, 1970. Alternatively a `POSIXct` o `POSIXlt` value can be used.
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+### Class
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+The service returns an XML document with several pieces of information:
 
-## More Examples
+- The (seed) value represented as a 64 byte (512-bit) hex string value, and its timestamp
+- The SHA-512 hash value for the previous record as a 64 byte hex string
+- A digital signature (RSA) computed over (in order): version, frequency, timeStamp, seedValue, previousHashValue, errorCode. *Note*: Except for version, the hash is on the byte representations and not the string representations of the data values
+- The SHA-512 hash of the signature as a 64 byte hex string
+- The service version and its update frequency (currenty, 60 seconds)
+- The status of the response
+    - 0 = Chain intact, values all good
+    - 1 = Start of a new chain of values, previous hash value will be all zeroes
+    - 2 = Time between values is greater than the frequency, but the chain is still intact
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+This package wraps this XML document in the `nrb_record` class, which contains all
+the values from the beacon's response.
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r comment=""}
+library(nistrb)
+lval <- nrb_get_last()
+lval
 ```
 
-Also a quote using `>`:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
