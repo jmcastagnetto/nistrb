@@ -26,8 +26,9 @@ df <- data.frame(
 
 knitr::kable(df)
 
-## ----comment=""----------------------------------------------------------
-library(nistrb)
-lval <- nrb_get_last()
-lval
+## ----eval=FALSE----------------------------------------------------------
+#  library(nistrb)
+#  ts <- as.POSIXct("2015-01-01 10:00:00", tz = "UTC")
+#  lval <- nrb_get_record(ts)
+#  lval
 

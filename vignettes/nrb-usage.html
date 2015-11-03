@@ -10,7 +10,7 @@
 
 <meta name="author" content="Jesus Castagnetto (jesus@castagnetto.com)" />
 
-<meta name="date" content="2015-11-02" />
+<meta name="date" content="2015-11-03" />
 
 <title>nistr - Quick Reference</title>
 
@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">nistr - Quick Reference</h1>
 <h4 class="author"><em>Jesus Castagnetto (<a href="mailto:jesus@castagnetto.com">jesus@castagnetto.com</a>)</em></h4>
-<h4 class="date"><em>2015-11-02</em></h4>
+<h4 class="date"><em>2015-11-03</em></h4>
 </div>
 
 
@@ -119,42 +119,45 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <li>2 = Time between values is greater than the frequency, but the chain is still intact</li>
 </ul></li>
 </ul>
-<p>This package wraps this XML document in the <code>nrb_record</code> class, which contains all the values from the beacon’s response.</p>
+<p>This package wraps this XML document in the <code>nrb_response</code> class, which contains all the values from the beacon’s response.</p>
+<p>For example, to get the record generated on Jan 1, 2015 at 10:00h (UTC), we will use the following code:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nistrb)
-lval &lt;-<span class="st"> </span><span class="kw">nrb_get_last</span>()
+ts &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2015-01-01 10:00:00&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;UTC&quot;</span>)
+lval &lt;-<span class="st"> </span><span class="kw">nrb_get_record</span>(ts)
 lval</code></pre>
+<p>The last line prints:</p>
 <pre><code>NIST Randomness Beacon Response
 ===============================
 
-* version:  Version 1.0
+* version:      Version 1.0
 * frequency:    60 seconds
 
-* timestamp:    2015-11-02 17:01:00 (1446501660)
-* seed:     684CB3727736E4E5CF8F84A50E8F1E3EE9DA987A08E2AAB641
-        46A736EE1FA6F61FF69B8359EA56004322627CC6879741CA60
-        3D1002D16F331857D56157F33DE0
-        
-* prev.:    55169E33DB0B3A1CB3FDF85CD59DA52CB22F3E9FCAA4ED7A11
-        AB7B3714C010260CAC8B5890BC5C56D3FA69B42B3B47DB11F1
-        3D5151C2D29474AF1D6743AE0741
-        
-* signature:    7FEB4686C269AA7CBD1A719D24BE756DFA9D70B6FEB12B2FCD
-        E742334F7329408A5D30B12279C7EC58C1E1E92F6C17E82D6B
-        25AD29F82AE322A07041091B5106E44D879033D4D3F3547792
-        FA9D81ABC5F88C799AA2B9F077DE20764EBE546698BA762122
-        81DC5A19C40CB204FA6D009597A22E5F0027E9651F7A997591
-        4C161E6DE9581820E0C3594FD988326B8719A18BFA8DCB19D8
-        C88FF08FC10CBE55BB069D87E359F6643C85EDC35BC8B9F938
-        64D23A6D55EF3FBA802A5B7B456D1B06B7509CC90617971E62
-        B57351A22B0E6F675547F9697DFE6A803310285F0916307839
-        FA1A60D1E533349667DBAD3D0589561BAD781A726273E25D59
-        016DB62AC9A1
-        
-* output:   BDDDF56D8FEC16C502E0B687748016EF45E80AD138510D568F
-        5D590138A82138C526A279624B2EADF3516EF06A96FEA24E00
-        70BFF45EF961400A90F894D1FF47
-        
-* status:   0 (Chain intact, values all good)</code></pre>
+* timestamp:    2015-01-01 05:00:00 (1420106400)
+* seed:         037035A8D1F2C74D6E233F6B962E7A7233BBAF67A1B0247A81
+                29E0BB50D619144A4083A5375A1BC16731FFB83357DD5CC1A9
+                62523370453E6707E74762B515D6
+                
+* prev.:        368D684FB8DC709852C0E67ECA439774AF8C7D21CFAB73083A
+                1C0120C340B54C3237E1FB73C78B739884E05D8D11BA17AB9C
+                F10EEA3C37CBDEB888888486BD4F
+                
+* signature:    20F647B95F5A56DDBEA82044821DC022EB4CC0B53700CD6351
+                4CC02D320B42DAA684A1FFA9B8635E8BEE58A35DDDC899FB84
+                16BD08AE57EFBF26A2325E2334F1CC5B5B0126AF0866443215
+                7DE6C9FD58F857340D46DBAF902FD5D7770BFBB8755279EB92
+                D4787655B5A5658DFC97EB9209D4AC271EF30D5BDBCAAE2F37
+                5144BEEF5CB17A9CF37C52648ED0BC682ACFF147D2CA8CCC39
+                9253B351660261A6CF80A166089EA54E7F425B652C6417735C
+                2BE01414515481B05CC359836F0261CF1D7F1FC23BC0FA1A52
+                125455755CDF2DEECE5D4555883897E8DCD9FB564A868A0007
+                5489EA28D01949A56FD4BC5AFC14AB6766C80BECB69F31CB0D
+                DFA47FA59703
+                
+* output:       27DADEBF52C5834E1894B99625845689C7BFC1ABD05CC672B1
+                AC8A6A585424BC4C6E577C0249FBAFBDC589CD6937BEBBA764
+                7E1233692D2003237598F12FF342
+                
+* status:       0 (Chain intact, values all good</code></pre>
 </div>
 </div>
 <div class="footnotes">
