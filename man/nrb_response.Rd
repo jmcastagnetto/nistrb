@@ -4,7 +4,7 @@
 \alias{nrb_response}
 \title{A class representing the NIST Randomness Beacon response}
 \usage{
-nrb_response(response)
+nrb_response(response, endpoint)
 }
 \arguments{
 \item{response}{The raw XML response from the service}

@@ -4,7 +4,7 @@
 #' @return An nrb_response object
 #' @export
 
-nrb_response <- function (response) {
+nrb_response <- function(response, endpoint) {
   doc <- XML::xmlParse(response, asText=TRUE)
   # code for future use, at the moment their response does not validate
   # against their own schema
@@ -33,5 +33,6 @@ nrb_response <- function (response) {
       "Unknown status code, refer to NIST Randomness Beacon documentation"
     }
   )
+  beacon$url <- endpoint
   beacon
 }

@@ -37,7 +37,7 @@ nrb_call_service <- function(type, ts = .TS_NOW) {
   parsed_header <- RCurl::parseHTTPHeader(headers$value())
   status <- as.integer(parsed_header["status"])
   if (status == 200) {
-    return(nrb_response(response))
+    return(nrb_response(response, endpoint))
   } else {
     stop(paste0("The request (", endpoint, ") to the NIST Beacon returned an error: ",
                status, " [",

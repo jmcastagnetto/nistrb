@@ -65,43 +65,34 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="functions" class="section level3">
 <h3>Functions</h3>
 <p>According to the beacon’s documentation, there are five endpoints defined and this package wraps the call to each one in a function:</p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">Function</th>
-<th align="left">Endpoint</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>nrb_get_last()</code></td>
-<td align="left"><code>https://beacon.nist.gov/rest/record/last</code></td>
-<td align="left">Last Record</td>
-</tr>
-<tr class="even">
-<td align="left"><code>nrb_get_next(timestamp)</code></td>
-<td align="left"><code>https://beacon.nist.gov/rest/record/next/&lt;timestamp&gt;</code></td>
-<td align="left">Next Record</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>nrb_get_previous(timestamp)</code></td>
-<td align="left"><code>https://beacon.nist.gov/rest/record/previous/&lt;timestamp&gt;</code></td>
-<td align="left">Previous Record</td>
-</tr>
-<tr class="even">
-<td align="left"><code>nrb_get_record(timestamp)</code></td>
-<td align="left"><code>https://beacon.nist.gov/rest/record/&lt;timestamp&gt;</code></td>
-<td align="left">Current Record (or next closest)</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>nrb_get_start_chain(timestamp)</code></td>
-<td align="left"><code>https://beacon.nist.gov/rest/record/start-chain/&lt;timestamp&gt;</code></td>
-<td align="left">Start Chain Record</td>
-</tr>
-</tbody>
-</table>
-<p>Where <code>timestamp</code> is the POSIX time format: the number of seconds since midnight UTC, January 1, 1970. Alternatively a <code>POSIXct</code> o <code>POSIXlt</code> value can be used.</p>
+<ul>
+<li><code>nrb_get_last()</code>
+<ul>
+<li>Endpoint: <code>https://beacon.nist.gov/rest/record/last</code></li>
+<li>The last generated record</li>
+</ul></li>
+<li><code>nrb_get_next(timestamp)</code>
+<ul>
+<li>Endpoint: <code>https://beacon.nist.gov/rest/record/next/&lt;timestamp&gt;</code></li>
+<li>The record following the given timestamp</li>
+</ul></li>
+<li><code>nrb_get_previous(timestamp)</code>
+<ul>
+<li>Endpoint: <code>https://beacon.nist.gov/rest/record/previous/&lt;timestamp&gt;</code></li>
+<li>The record previous to the given timestamp</li>
+</ul></li>
+<li><code>nrb_get_record(timestamp)</code>
+<ul>
+<li>Endpoint: <code>https://beacon.nist.gov/rest/record/&lt;timestamp&gt;</code></li>
+<li>The record for the given timestamp (or the one closest)</li>
+</ul></li>
+<li><code>nrb_get_start_chain(timestamp)</code>
+<ul>
+<li>Endpoint: <code>https://beacon.nist.gov/rest/record/start-chain/&lt;timestamp&gt;</code></li>
+<li>“The start-of-chain record for the given timestamp</li>
+</ul></li>
+</ul>
+<p>Where <code>timestamp</code> is in POSIX time format: the number of seconds since midnight UTC, January 1, 1970. Alternatively a <code>POSIXct</code> o <code>POSIXlt</code> value can be used.</p>
 </div>
 <div id="class" class="section level3">
 <h3>Class</h3>
@@ -120,45 +111,90 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </ul></li>
 </ul>
 <p>This package wraps this XML document in the <code>nrb_response</code> class, which contains all the values from the beacon’s response.</p>
+<p>An <code>nrb_response</code> object contains the properties</p>
+<ul>
+<li><code>version</code>: The current beacon’s version</li>
+<li><code>frequency</code>: The beacon’s update frequency in seconds</li>
+<li><code>url</code>: The endpoint call</li>
+<li><code>timeStamp</code>: The timestamp (UTC) in Unix Time format</li>
+<li><code>seedValue</code>: The random beacon string for a given timestamp</li>
+<li><code>previousOutputValue</code>: The hash of the previous beacon’s record signature</li>
+<li><code>signatureValue</code>: The digital signature of the record</li>
+<li><code>outputValue</code>: The hash of the current signature</li>
+<li><code>statusCode</code>: The service status code for this record</li>
+<li><code>statusDesc</code>: A description of the status code</li>
+</ul>
 <p>For example, to get the record generated on Jan 1, 2015 at 10:00h (UTC), we will use the following code:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nistrb)
 ts &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2015-01-01 10:00:00&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;UTC&quot;</span>)
-lval &lt;-<span class="st"> </span><span class="kw">nrb_get_record</span>(ts)
-lval</code></pre>
-<p>The last line prints:</p>
-<pre><code>NIST Randomness Beacon Response
-===============================
-
-* version:      Version 1.0
-* frequency:    60 seconds
-
-* timestamp:    2015-01-01 05:00:00 (1420106400)
-* seed:         037035A8D1F2C74D6E233F6B962E7A7233BBAF67A1B0247A81
-                29E0BB50D619144A4083A5375A1BC16731FFB83357DD5CC1A9
-                62523370453E6707E74762B515D6
-                
-* prev.:        368D684FB8DC709852C0E67ECA439774AF8C7D21CFAB73083A
-                1C0120C340B54C3237E1FB73C78B739884E05D8D11BA17AB9C
-                F10EEA3C37CBDEB888888486BD4F
-                
-* signature:    20F647B95F5A56DDBEA82044821DC022EB4CC0B53700CD6351
-                4CC02D320B42DAA684A1FFA9B8635E8BEE58A35DDDC899FB84
-                16BD08AE57EFBF26A2325E2334F1CC5B5B0126AF0866443215
-                7DE6C9FD58F857340D46DBAF902FD5D7770BFBB8755279EB92
-                D4787655B5A5658DFC97EB9209D4AC271EF30D5BDBCAAE2F37
-                5144BEEF5CB17A9CF37C52648ED0BC682ACFF147D2CA8CCC39
-                9253B351660261A6CF80A166089EA54E7F425B652C6417735C
-                2BE01414515481B05CC359836F0261CF1D7F1FC23BC0FA1A52
-                125455755CDF2DEECE5D4555883897E8DCD9FB564A868A0007
-                5489EA28D01949A56FD4BC5AFC14AB6766C80BECB69F31CB0D
-                DFA47FA59703
-                
-* output:       27DADEBF52C5834E1894B99625845689C7BFC1ABD05CC672B1
-                AC8A6A585424BC4C6E577C0249FBAFBDC589CD6937BEBBA764
-                7E1233692D2003237598F12FF342
-                
-* status:       0 (Chain intact, values all good</code></pre>
+rec &lt;-<span class="st"> </span><span class="kw">nrb_get_record</span>(ts)
+rec</code></pre>
+<pre><code>## NIST Randomness Beacon Response
+## ===============================
+## 
+## * version:      Version 1.0
+## * frequency:    60 seconds
+## 
+## * url:          https://beacon.nist.gov/rest/record/1420106400
+## * timestamp:    2015-01-01 05:00:00 (1420106400)
+## * seed:         037035A8D1F2C74D6E233F6B962E7A7233BBAF67A1B0247A81
+##                 29E0BB50D619144A4083A5375A1BC16731FFB83357DD5CC1A9
+##                 62523370453E6707E74762B515D6
+##                 
+## * prev.:        368D684FB8DC709852C0E67ECA439774AF8C7D21CFAB73083A
+##                 1C0120C340B54C3237E1FB73C78B739884E05D8D11BA17AB9C
+##                 F10EEA3C37CBDEB888888486BD4F
+##                 
+## * signature:    20F647B95F5A56DDBEA82044821DC022EB4CC0B53700CD6351
+##                 4CC02D320B42DAA684A1FFA9B8635E8BEE58A35DDDC899FB84
+##                 16BD08AE57EFBF26A2325E2334F1CC5B5B0126AF0866443215
+##                 7DE6C9FD58F857340D46DBAF902FD5D7770BFBB8755279EB92
+##                 D4787655B5A5658DFC97EB9209D4AC271EF30D5BDBCAAE2F37
+##                 5144BEEF5CB17A9CF37C52648ED0BC682ACFF147D2CA8CCC39
+##                 9253B351660261A6CF80A166089EA54E7F425B652C6417735C
+##                 2BE01414515481B05CC359836F0261CF1D7F1FC23BC0FA1A52
+##                 125455755CDF2DEECE5D4555883897E8DCD9FB564A868A0007
+##                 5489EA28D01949A56FD4BC5AFC14AB6766C80BECB69F31CB0D
+##                 DFA47FA59703
+##                 
+## * output:       27DADEBF52C5834E1894B99625845689C7BFC1ABD05CC672B1
+##                 AC8A6A585424BC4C6E577C0249FBAFBDC589CD6937BEBBA764
+##                 7E1233692D2003237598F12FF342
+##                 
+## * status:       0 (Chain intact, values all good)</code></pre>
+<p>We can also make sure that the record chain is unbroken, getting the previous record from the beacon (Jan 1, 2015 09:59h, UTC):</p>
+<pre class="sourceCode r"><code class="sourceCode r">prev_ts &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2015-01-01 09:59:00&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;UTC&quot;</span>)
+prev_rec &lt;-<span class="st"> </span><span class="kw">nrb_get_record</span>(prev_ts)
+prev_rec$output ==<span class="st"> </span>rec$previousOutputValue</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>or the next record:</p>
+<pre class="sourceCode r"><code class="sourceCode r">next_ts &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2015-01-01 10:01:00&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;UTC&quot;</span>)
+next_rec &lt;-<span class="st"> </span><span class="kw">nrb_get_record</span>(next_ts)
+rec$output ==<span class="st"> </span>next_rec$previousOutputValue</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 </div>
+</div>
+<div id="example-of-use" class="section level2">
+<h2>Example of use</h2>
+<p>We can use the NIST Randomness Beacon as a source of reproducible random seeds that depends on a timestamp, for example:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nistrb)
+
+<span class="co"># get the number of numeric chars in the seed</span>
+<span class="co"># more than a bit contrived as examples go</span>
+gen_seed &lt;-<span class="st"> </span>function(timestamp) {
+  rec &lt;-<span class="st"> </span><span class="kw">nrb_get_record</span>(timestamp)
+  chrs &lt;-<span class="st"> </span><span class="kw">strsplit</span>(rec$seedValue, <span class="ot">NULL</span>)
+  <span class="kw">sum</span>(<span class="kw">sapply</span>(chrs, <span class="dt">FUN =</span> function(x) {
+      <span class="kw">grepl</span>(<span class="dt">pattern =</span> <span class="st">&quot;[0-9]&quot;</span>, <span class="dt">x =</span> x)
+    }))
+}
+
+ts &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2015-07-28 00:00:00&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;UTC&quot;</span>)
+<span class="kw">gen_seed</span>(ts)</code></pre>
+<pre><code>## [1] 76</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">ts &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2014-12-25 12:00:00&quot;</span>, <span class="dt">tz =</span> <span class="st">&quot;UTC&quot;</span>)
+<span class="kw">gen_seed</span>(ts)</code></pre>
+<pre><code>## [1] 81</code></pre>
 </div>
 <div class="footnotes">
 <hr />

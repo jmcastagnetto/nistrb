@@ -20,6 +20,7 @@ print.nrb_response <- function(x, ...) {
   output <- "NIST Randomness Beacon Response\n===============================\n\n"
   output <- paste0(output, "* version:      ", x$version, "\n")
   output <- paste0(output, "* frequency:    ", x$frequency, " seconds\n\n")
+  output <- paste0(output, "* url:          ", x$url , "\n")
   output <- paste0(output, "* timestamp:    ", as.POSIXct(x$timeStamp, origin="1970-01-01"),
                    " (", x$timeStamp,")\n")
   output <- paste0(output, "* seed:         ", breakline(x$seedValue), "\n")
