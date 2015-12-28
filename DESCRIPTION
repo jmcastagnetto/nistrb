@@ -2,21 +2,12 @@ Package: nistrb
 Type: Package
 Title: Access the NIST Randomness Beacon
 Version: 0.1
-Date: 2015-10-28
+Date: 2015-12-28
 Authors@R: person("Jesus", "Castagnetto", email="jesus@castagnetto.com",
             role=c("aut", "cre"))
 Maintainer: Jesus Castagnetto <jesus@castagnetto.com>
 Description: This package allows programmatic access to the NIST Randomness
     Beacon, through its REST web service interface.
-    The service returns an XML document with several pieces of information:
-    \itemize {
-        \item The (seed) value represented as a 64 byte (512-bit) hex string value, and its timestamp
-        \item The SHA-512 hash value for the previous record as a 64 byte hex string
-        \item A digital signature (RSA) computed over (in order): version, frequency, timeStamp, seedValue, previousHashValue, errorCode. Note: Except for version, the hash is on the byte representations and not the string representations of the data values
-        \item The SHA-512 hash of the signature as a 64 byte hex string
-        \item The service version and its update frequency
-        \item The status of the response
-    }
 License: MIT + file LICENSE
 LazyData: TRUE
 Imports:
@@ -27,3 +18,4 @@ Suggests:
     knitr,
     testthat
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1
