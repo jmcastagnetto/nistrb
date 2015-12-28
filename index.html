@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="nistrb : An R package to access the NIST Randomness Beacon">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>nistrb</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jmcastagnetto/nistrb">View on GitHub</a>
+
+          <h1 id="project_title">nistrb</h1>
+          <h2 id="project_tagline">An R package to access the NIST Randomness Beacon</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jmcastagnetto/nistrb/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jmcastagnetto/nistrb/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><strong>LICENSE: MIT</strong></p>
+
+<p>This package implements R functions and an S3 class to access the
+NIST Randomness Beacon, through its REST web service interface.</p>
+
+<p>This NIST service "<em>generates full-entropy bit-strings and posts them in blocks
+of 512 bits every 60 seconds</em>" (<a href="https://beacon.nist.gov/home">https://beacon.nist.gov/home</a>)</p>
+
+<h2>
+<a id="releases" class="anchor" href="#releases" aria-hidden="true"><span class="octicon octicon-link"></span></a>Releases</h2>
+
+<ul>
+<li>2015-12-28 -- <a href="https://github.com/jmcastagnetto/nistrb/releases/tag/v0.1">version 0.1</a>
+</li>
+</ul>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<div class="highlight highlight-source-r"><pre><span class="pl-k">&gt;</span> library(<span class="pl-smi">devtools</span>)
+<span class="pl-k">&gt;</span> install_github(<span class="pl-s"><span class="pl-pds">"</span>jmcastagnetto/nistrb@master<span class="pl-pds">"</span></span>)</pre></div>
+
+<h2>
+<a id="implementation-details" class="anchor" href="#implementation-details" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation details</h2>
+
+<p>According to the beacon's documentation, there are five endpoints defined and
+this package wraps the call to each one in a function:</p>
+
+<ul>
+<li>
+<code>nrb_get_last()</code>:
+
+<ul>
+<li>
+<code>https://beacon.nist.gov/rest/record/last</code> (Last Record)</li>
+</ul>
+</li>
+<li>
+<code>nrb_get_next(timestamp)</code>:
+
+<ul>
+<li>
+<code>https://beacon.nist.gov/rest/record/next/&lt;timestamp&gt;</code> (Next Record)</li>
+</ul>
+</li>
+<li>
+<code>nrb_get_previous(timestamp)</code>:
+
+<ul>
+<li>
+<code>https://beacon.nist.gov/rest/record/previous/&lt;timestamp&gt;</code> (Previous Record)</li>
+</ul>
+</li>
+<li>
+<code>nrb_get_record(timestamp)</code>:
+
+<ul>
+<li>
+<code>https://beacon.nist.gov/rest/record/&lt;timestamp&gt;</code> (Current Record or next closest to <code>timestamp</code>)</li>
+</ul>
+</li>
+<li>
+<code>nrb_get_start_chain(timestamp)</code>:
+
+<ul>
+<li>
+<code>https://beacon.nist.gov/rest/record/start-chain/&lt;timestamp&gt;</code> (Start of Chain Record)</li>
+</ul>
+</li>
+</ul>
+
+<p>The result of calling an endpoint is returned as an object of class <code>nrb_response</code>.</p>
+
+<p>For example, to get the record generated on Jan 1, 2015 at 10:00h (UTC), we will
+use the following code:</p>
+
+<div class="highlight highlight-source-r"><pre>library(<span class="pl-smi">nistrb</span>)
+<span class="pl-smi">ts</span> <span class="pl-k">&lt;-</span> as.POSIXct(<span class="pl-s"><span class="pl-pds">"</span>2015-01-01 10:00:00<span class="pl-pds">"</span></span>, <span class="pl-v">tz</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>UTC<span class="pl-pds">"</span></span>)
+<span class="pl-smi">lval</span> <span class="pl-k">&lt;-</span> nrb_get_record(<span class="pl-smi">ts</span>)
+<span class="pl-smi">lval</span></pre></div>
+
+<p>The last line prints:</p>
+
+<pre><code>NIST Randomness Beacon Response
+===============================
+
+* version:      Version 1.0
+* frequency:    60 seconds
+
+* url:          https://beacon.nist.gov/rest/record/1420106400
+* timestamp:    2015-01-01 10:00:00 UTC (1420106400)
+* seed:         037035A8D1F2C74D6E233F6B962E7A7233BBAF67A1B0247A81
+                29E0BB50D619144A4083A5375A1BC16731FFB83357DD5CC1A9
+                62523370453E6707E74762B515D6
+
+* prev.:        368D684FB8DC709852C0E67ECA439774AF8C7D21CFAB73083A
+                1C0120C340B54C3237E1FB73C78B739884E05D8D11BA17AB9C
+                F10EEA3C37CBDEB888888486BD4F
+
+* signature:    20F647B95F5A56DDBEA82044821DC022EB4CC0B53700CD6351
+                4CC02D320B42DAA684A1FFA9B8635E8BEE58A35DDDC899FB84
+                16BD08AE57EFBF26A2325E2334F1CC5B5B0126AF0866443215
+                7DE6C9FD58F857340D46DBAF902FD5D7770BFBB8755279EB92
+                D4787655B5A5658DFC97EB9209D4AC271EF30D5BDBCAAE2F37
+                5144BEEF5CB17A9CF37C52648ED0BC682ACFF147D2CA8CCC39
+                9253B351660261A6CF80A166089EA54E7F425B652C6417735C
+                2BE01414515481B05CC359836F0261CF1D7F1FC23BC0FA1A52
+                125455755CDF2DEECE5D4555883897E8DCD9FB564A868A0007
+                5489EA28D01949A56FD4BC5AFC14AB6766C80BECB69F31CB0D
+                DFA47FA59703
+
+* output:       27DADEBF52C5834E1894B99625845689C7BFC1ABD05CC672B1
+                AC8A6A585424BC4C6E577C0249FBAFBDC589CD6937BEBBA764
+                7E1233692D2003237598F12FF342
+
+* status:       0 (Chain intact, values all good)
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">nistrb maintained by <a href="https://github.com/jmcastagnetto">jmcastagnetto</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
