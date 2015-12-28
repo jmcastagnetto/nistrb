@@ -9,6 +9,12 @@
 # Operations supported by the NIST Randomness Beacon
 .BEACON_OPS <- c("record", "next", "previous", "last", "start-chain")
 
+# Beacon's response schema
+.BEACON_XSD <- "https://beacon.nist.gov/record/0.1/beacon-0.1.0.xsd"
+
+# Local copy of beacon's schema
+.BEACON_LOCAL_XSD <- "/tmp/nist-randomness-beacon.xsd"
+
 #' Generic function that does the calling and processes the beacon's response
 #'
 #' This functions is intended to be called by the wrapper functions

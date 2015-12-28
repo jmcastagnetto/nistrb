@@ -1,20 +1,25 @@
 #' A class representing the NIST Randomness Beacon response
 #'
 #' @param response The raw XML response from the service
+#' @param endpoint The REST endpoint for the service call
 #' @return An nrb_response object
 #' @export
 
 nrb_response <- function(response, endpoint) {
   doc <- XML::xmlParse(response, asText=TRUE)
-  # code for future use, at the moment their response does not validate
-  # against their own schema
-#   xsd <- XML::xmlSchemaParse("misc/beacon-0.1.0.xsd")
-#   valid <- XML::xmlSchemaValidate(xsd, xml)
-#   if (valid$status != 0) {
-#     cat(response)
-#     str(valid$errors)
-#     stop("The NIST Randomness Beacon response does not validate against its XSD!")
-#   }
+   # get the schema file
+   if (!file.exists(.BEACON_LOCAL_XSD)) {
+     download.file(.BEACON_XSD, .BEACON_LOCAL_XSD,
+                   method = "libcurl", quiet = TRUE,
+                   cacheOK = TRUE)
+   }
+   xsd <- XML::xmlSchemaParse(.BEACON_LOCAL_XSD)
+   valid <- XML::xmlSchemaValidate(xsd, doc)
+   if (valid$status != 0) {
+     cat(response)
+     str(valid$errors)
+     stop("The NIST Randomness Beacon response does not validate against its XSD!")
+   }
   beacon <- structure(
               as.data.frame(XML::xmlToList(doc), stringsAsFactors = FALSE),
               class="nrb_response")
