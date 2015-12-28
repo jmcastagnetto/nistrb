@@ -65,5 +65,5 @@ NIST Randomness Beacon Response
                 AC8A6A585424BC4C6E577C0249FBAFBDC589CD6937BEBBA764
                 7E1233692D2003237598F12FF342
 
-* status:       0 (Chain intact, values all good
+* status:       0 (Chain intact, values all good)
 ```
