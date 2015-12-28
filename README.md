@@ -45,7 +45,8 @@ NIST Randomness Beacon Response
 * version:      Version 1.0
 * frequency:    60 seconds
 
-* timestamp:    2015-01-01 05:00:00 (1420106400)
+* url:          https://beacon.nist.gov/rest/record/1420106400
+* timestamp:    2015-01-01 10:00:00 UTC (1420106400)
 * seed:         037035A8D1F2C74D6E233F6B962E7A7233BBAF67A1B0247A81
                 29E0BB50D619144A4083A5375A1BC16731FFB83357DD5CC1A9
                 62523370453E6707E74762B515D6
