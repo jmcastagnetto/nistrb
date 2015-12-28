@@ -5,19 +5,24 @@
 This package implements R functions and an S3 class to access the
 NIST the NIST Randomness Beacon, through its REST web service interface.
 
-The NIST service <q>generates full-entropy bit-strings and posts them in blocks
-of 512 bits every 60 seconds</q>^[https://beacon.nist.gov/home]
+This NIST service "*generates full-entropy bit-strings and posts them in blocks
+of 512 bits every 60 seconds*" (https://beacon.nist.gov/home)
 
 ## Implementation details
 
 According to the beacon's documentation, there are five endpoints defined and
 this package wraps the call to each one in a function:
 
-- `nrb_get_last()`: `https://beacon.nist.gov/rest/record/last` (Last Record)
-- `nrb_get_next(timestamp)`: `https://beacon.nist.gov/rest/record/next/<timestamp>` (Next Record)
-- `nrb_get_previous(timestamp)`: `https://beacon.nist.gov/rest/record/previous/<timestamp>` (Previous Record)
-- `nrb_get_record(timestamp)`: `https://beacon.nist.gov/rest/record/<timestamp>` (Current Record or next closest to `timestamp`)
-- `nrb_get_start_chain(timestamp)`: `https://beacon.nist.gov/rest/record/start-chain/<timestamp>` (Start of Chain Record)
+- `nrb_get_last()`:
+  - `https://beacon.nist.gov/rest/record/last` (Last Record)
+- `nrb_get_next(timestamp)`:
+  - `https://beacon.nist.gov/rest/record/next/<timestamp>` (Next Record)
+- `nrb_get_previous(timestamp)`:
+  - `https://beacon.nist.gov/rest/record/previous/<timestamp>` (Previous Record)
+- `nrb_get_record(timestamp)`:
+  - `https://beacon.nist.gov/rest/record/<timestamp>` (Current Record or next closest to `timestamp`)
+- `nrb_get_start_chain(timestamp)`:
+  - `https://beacon.nist.gov/rest/record/start-chain/<timestamp>` (Start of Chain Record)
 
 The result of calling an endpoint is returned as an object of class `nrb_response`.
 
